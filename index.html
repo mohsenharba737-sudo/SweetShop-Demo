@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مصنع أبو علي للحلويات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+--gold:#c6a75e;
+--dark:#1e1e1e;
+--light:#f8f6f1;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+font-family:'Cairo',sans-serif;
+background:var(--light);
+overflow-x:hidden;
+transition:0.3s;
+}
+header{
+position:fixed;top:0;width:100%;background:white;display:flex;justify-content:space-between;align-items:center;
+padding:10px 20px;box-shadow:0 4px 15px rgba(0,0,0,0.05);z-index:1000;transition:0.3s;
+}
+header .logo img{height:50px;}
+nav a{margin:0 8px;text-decoration:none;color:#333;font-weight:600;cursor:pointer;}
+nav a:hover{color:var(--gold);}
+.lang-btn{cursor:pointer;display:flex;align-items:center;gap:6px;background:#f3f3f3;padding:6px 12px;border-radius:20px;font-weight:600;font-size:14px;}
+.lang-btn span{font-weight:700;}
+.cart-btn{position:relative;cursor:pointer;font-size:22px;transition:0.3s;}
+.cart-count{position:absolute;top:-8px;left:-8px;background:red;color:white;border-radius:50%;font-size:12px;padding:3px 6px;}
+.hero{height:60vh;background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)), url('https://i.imgur.com/UeZMuev.jpeg');background-size:cover;background-position:center;display:flex;justify-content:center;align-items:center;text-align:center;color:white;padding:20px;margin-top:60px;}
+.hero h1{font-size:36px;}
+section{padding:80px 20px;}
+.section-title{text-align:center;font-size:28px;margin-bottom:30px;color:var(--gold);}
+.slider-wrapper{position:relative;}
+.products, .offers-slider{display:flex;gap:20px;overflow-x:auto;scroll-behavior:smooth;padding:10px;}
+.products::-webkit-scrollbar, .offers-slider::-webkit-scrollbar{display:none;}
+.card{min-width:250px;background:white;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.08);overflow:hidden;transition:.3s;flex-shrink:0;cursor:pointer;}
+.card:hover{transform:scale(1.05);box-shadow:0 15px 30px rgba(0,0,0,0.15);}
+.card img{width:100%;height:180px;object-fit:cover;}
+.card-content{padding:15px;text-align:center;}
+.price{color:var(--gold);font-weight:700;margin:10px 0;}
+.btn{background:var(--gold);border:none;padding:8px 15px;color:white;font-weight:600;border-radius:20px;cursor:pointer;}
+.arrow{position:absolute;top:40%;transform:translateY(-50%);background:var(--gold);color:white;border:none;font-size:20px;padding:10px;border-radius:50%;cursor:pointer;z-index:10;}
+.arrow.left{right:-15px;}
+.arrow.right{left:-15px;}
+.cart-sidebar{
+position:fixed;top:0;width:350px;height:100%;background:white;box-shadow:5px 0 20px rgba(0,0,0,.2);
+padding:20px;transition:.4s;z-index:2000;overflow-y:auto;right:-400px;}
+body[dir="ltr"] .cart-sidebar{left:-400px;right:auto;}
+.cart-sidebar.open{right:0;}
+body[dir="ltr"] .cart-sidebar.open{left:0;right:auto;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;}
+.cart-item button{background:red;padding:3px 6px;border:none;border-radius:5px;color:white;cursor:pointer;}
+.total{font-weight:800;margin-top:20px;}
+footer{background:var(--dark);color:white;text-align:center;padding:20px;}
+@media(max-width:600px){.hero h1{font-size:28px;}.card{min-width:200px;}}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo"><img src="https://i.imgur.com/Gk4UNPY.jpeg" alt="Logo"></div>
+<nav>
+<a onclick="scrollToSection('home')"><span id="navHome">الرئيسية</span></a>
+<a onclick="scrollToSection('about')"><span id="navAbout">من نحن</span></a>
+<a onclick="scrollToSection('products')"><span id="navProducts">المنتجات</span></a>
+<a onclick="scrollToSection('offers')"><span id="navOffers">العروض</span></a>
+<a onclick="scrollToSection('contact')"><span id="navContact">تواصل</span></a>
+</nav>
+<div style="display:flex;gap:10px;align-items:center;">
+<div class="lang-btn" onclick="switchLang()">🌐 <span id="langText">العربية</span></div>
+<div class="cart-btn" id="cartIcon" onclick="toggleCart()">🛒
+<span class="cart-count" id="cartCount">0</span>
+</div>
+</div>
+</header>
+
+<div class="hero" id="home"><h1 id="heroTitle">أفخر الحلويات الشرقية والغربية</h1></div>
+
+<section id="about">
+<h2 class="section-title" id="aboutTitle">من نحن</h2>
+<p id="aboutText" style="text-align:center;max-width:700px;margin:auto;">
+مصنع أبو علي للحلويات تأسس عام 1998، متخصص في الحلويات الشرقية والغربية المصنوعة بأيدي محترفين مع الحفاظ على جودة المكونات. ندمج بين الوصفات التراثية واللمسات العصرية لتقديم تجربة طعم لا تُنسى.
+</p>
+</section>
+
+<section id="products">
+<h2 class="section-title" id="productsTitle">منتجاتنا</h2>
+<div class="slider-wrapper">
+<button class="arrow left" onclick="scrollProducts(-300,'productContainer')">‹</button>
+<button class="arrow right" onclick="scrollProducts(300,'productContainer')">›</button>
+<div class="products" id="productContainer"></div>
+</div>
+</section>
+
+<section id="offers">
+<h2 class="section-title" id="offersTitle">العروض الخاصة</h2>
+<div class="slider-wrapper">
+<button class="arrow left" onclick="scrollProducts(-300,'offersContainer')">‹</button>
+<button class="arrow right" onclick="scrollProducts(300,'offersContainer')">›</button>
+<div class="offers-slider" id="offersContainer"></div>
+</div>
+</section>
+
+<section id="contact">
+<h2 class="section-title" id="contactTitle">تواصل معنا</h2>
+<p id="contactText" style="text-align:center;">📞 0999999999 – دمشق، سوريا</p>
+</section>
+
+<div class="cart-sidebar" id="cartSidebar">
+<h3 id="cartTitle">سلة المشتريات</h3>
+<div id="cartItems"></div>
+<div class="total" id="totalPrice"></div>
+<button class="btn" style="width:100%;margin-top:15px;" onclick="checkoutWhatsApp()" id="checkoutBtn">إتمام الطلب عبر واتساب</button>
+</div>
+
+<footer>
+<p id="footerText">📞 0999999999 – دمشق، سوريا</p>
+</footer>
+
+<script>
+let lang="ar";
+const content={
+ar:{langText:"العربية",heroTitle:"أفخر الحلويات الشرقية والغربية",aboutTitle:"من نحن",
+aboutText:"مصنع أبو علي للحلويات تأسس عام 1998، متخصص في الحلويات الشرقية والغربية المصنوعة بأيدي محترفين مع الحفاظ على جودة المكونات. ندمج بين الوصفات التراثية واللمسات العصرية لتقديم تجربة طعم لا تُنسى.",
+productsTitle:"منتجاتنا",offersTitle:"العروض الخاصة",
+contactTitle:"تواصل معنا",contactText:"📞 0999999999 – دمشق، سوريا",
+cartTitle:"سلة المشتريات",checkoutBtn:"إتمام الطلب عبر واتساب",addCart:"أضف للسلة",removeCart:"✖",total:"المجموع: ",
+navHome:"الرئيسية",navAbout:"من نحن",navProducts:"المنتجات",navOffers:"العروض",navContact:"تواصل"},
+en:{langText:"English",heroTitle:"Premium Oriental & Western Sweets",aboutTitle:"About Us",
+aboutText:"Abu Ali Sweets Factory was founded in 1998, specialized in oriental & western sweets with expert hands and high-quality ingredients. We blend heritage recipes with modern touches for an unforgettable taste.",
+productsTitle:"Our Products",offersTitle:"Special Offers",
+contactTitle:"Contact Us",contactText:"📞 0999999999 – Damascus, Syria",
+cartTitle:"Shopping Cart",checkoutBtn:"Checkout via WhatsApp",addCart:"Add to Cart",removeCart:"✖",total:"Total: ",
+navHome:"Home",navAbout:"About",navProducts:"Products",navOffers:"Offers",navContact:"Contact"}
+};
+
+const imgList=[
+"https://i.imgur.com/UeZMuev.jpeg",
+"https://i.imgur.com/bMU8PB8.jpeg",
+"https://i.imgur.com/WLIgmPb.jpeg",
+"https://i.imgur.com/bVh00T3.jpeg",
+"https://i.imgur.com/Lqkx6fK.jpeg",
+"https://i.imgur.com/RkgNbW5.jpeg"
+];
+
+let products=[
+{name_ar:"بقلاوة فاخرة",name_en:"Premium Baklava",price:15000,img:imgList[0]},
+{name_ar:"معمول تمر",name_en:"Maamoul Dates",price:12000,img:imgList[1]},
+{name_ar:"كيك شوكولا",name_en:"Chocolate Cake",price:18000,img:imgList[2]},
+{name_ar:"غريبة سمن عربي",name_en:"Ghraybeh",price:10000,img:imgList[3]},
+{name_ar:"نمورة بالقشطة",name_en:"Namoura Cream",price:16000,img:imgList[4]},
+{name_ar:"براونيز",name_en:"Brownies",price:14000,img:imgList[5]}
+];
+
+let offers=[
+{name_ar:"عرض العائلة",name_en:"Family Offer",price:45000,img:imgList[0]},
+{name_ar:"عرض المناسبات",name_en:"Events Offer",price:120000,img:imgList[1]},
+{name_ar:"عرض الكيك",name_en:"Cake Offer",price:35000,img:imgList[2]}
+];
+
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+
+function renderProducts(){
+document.getElementById("heroTitle").innerText=content[lang].heroTitle;
+document.getElementById("aboutTitle").innerText=content[lang].aboutTitle;
+document.getElementById("aboutText").innerText=content[lang].aboutText;
+document.getElementById("productsTitle").innerText=content[lang].productsTitle;
+document.getElementById("offersTitle").innerText=content[lang].offersTitle;
+document.getElementById("contactTitle").innerText=content[lang].contactTitle;
+document.getElementById("contactText").innerText=content[lang].contactText;
+document.getElementById("cartTitle").innerText=content[lang].cartTitle;
+document.getElementById("checkoutBtn").innerText=content[lang].checkoutBtn;
+document.getElementById("langText").innerText=content[lang].langText;
+document.getElementById("navHome").innerText=content[lang].navHome;
+document.getElementById("navAbout").innerText=content[lang].navAbout;
+document.getElementById("navProducts").innerText=content[lang].navProducts;
+document.getElementById("navOffers").innerText=content[lang].navOffers;
+document.getElementById("navContact").innerText=content[lang].navContact;
+
+const container=document.getElementById("productContainer");
+container.innerHTML="";
+products.forEach((p,i)=>{
+container.innerHTML+=`<div class="card">
+<img src="${p.img}">
+<div class="card-content">
+<h3>${lang==="ar"?p.name_ar:p.name_en}</h3>
+<div class="price">${p.price} ${lang==="ar"?"ل.س":"SYP"}</div>
+<button class="btn" onclick="addToCart(${i})">${content[lang].addCart}</button>
+</div></div>`;
+});
+
+const offersContainer=document.getElementById("offersContainer");
+offersContainer.innerHTML="";
+offers.forEach((o,i)=>{
+offersContainer.innerHTML+=`<div class="card">
+<img src="${o.img}">
+<div class="card-content">
+<h3>${lang==="ar"?o.name_ar:o.name_en}</h3>
+<div class="price">${o.price} ${lang==="ar"?"ل.س":"SYP"}</div>
+<button class="btn" onclick="addToCartOffer(${i})">${content[lang].addCart}</button>
+</div></div>`;
+});
+
+updateCart();
+updateCartIconPosition();
+}
+
+function scrollProducts(value,id){document.getElementById(id).scrollBy({left:value,behavior:"smooth"});}
+function addToCart(index){cart.push(products[index]);localStorage.setItem("cart",JSON.stringify(cart));updateCart();}
+function addToCartOffer(index){cart.push(offers[index]);localStorage.setItem("cart",JSON.stringify(cart));updateCart();}
+function removeFromCart(index){cart.splice(index,1);localStorage.setItem("cart",JSON.stringify(cart));updateCart();}
+
+function updateCart(){
+document.getElementById("cartCount").innerText=cart.length;
+const container=document.getElementById("cartItems");
+container.innerHTML="";
+let total=0;
+cart.forEach((item,i)=>{
+total+=item.price;
+container.innerHTML+=`<div class="cart-item">
+<span>${lang==="ar"?item.name_ar:item.name_en}</span>
+<span>${item.price} ${lang==="ar"?"ل.س":"SYP"}</span>
+<button onclick="removeFromCart(${i})">${content[lang].removeCart}</button>
+</div>`;
+});
+document.getElementById("totalPrice").innerText=content[lang].total+total+" "+(lang==="ar"?"ل.س":"SYP");
+}
+
+function toggleCart(){
+const cartDiv=document.getElementById("cartSidebar");
+cartDiv.classList.toggle("open");
+updateCartIconPosition();
+}
+
+function updateCartIconPosition(){
+const icon=document.getElementById("cartIcon");
+if(lang==="ar"){icon.style.order=2;} else{icon.style.order=0;}
+}
+
+function checkoutWhatsApp(){
+if(cart.length===0){alert(lang==="ar"?"السلة فارغة":"Cart is empty"); return;}
+let message=(lang==="ar"?"طلب جديد:%0A":"New order:%0A");
+cart.forEach(item=>{message+=`${lang==="ar"?item.name_ar:item.name_en} - ${item.price} ${lang==="ar"?"ل.س":"SYP"}%0A`;});
+let total=cart.reduce((sum,i)=>sum+i.price,0);
+message+= (lang==="ar"?"المجموع: ":"Total: ") + total + " " + (lang==="ar"?"ل.س":"SYP");
+window.open("https://wa.me/963999999999?text="+message,"_blank");
+}
+
+function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:"smooth"});}
+function switchLang(){lang=(lang==="ar"?"en":"ar");document.body.dir=(lang==="ar"?"rtl":"ltr");renderProducts();}
+renderProducts();
+</script>
+
+</body>
+</html>
